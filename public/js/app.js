@@ -104,109 +104,7 @@ $(document).ready(function(){
   $(document).on('click', '.save-changes', (e) => {
     handleSaveChangesButton(e);
   })
-  $(document).on('click', '.edit-songs', (e) => {
-    handleEditSongsButton(e);
-  })
-  $(document).on('click', '.save-song', (e) => {
-    handleSaveSongButton(e);
-  })
-  $(document).on('click', '.delete-song', (e) => {
-    handleDeleteSongButton(e);
-  })
 });
-
-const handleDeleteSongButton = (e) => {
-  e.preventDefault();
-  let songId = e.target.dataset.songId;
-  let currentAlbumId = e.target.parentNode.parentNode.id;
-  let url = '/api/albums/' + currentAlbumId + '/songs/' + songId;
-  $.ajax({
-    method: 'DELETE',
-    url: url,
-    success: deleteAlbumSuccess,
-    error: deleteSongError
-  })
-}
-
-const handleSaveSongButton = (e) => {
-  e.preventDefault();
-  console.log(e);
-  let songId = e.target.dataset.songId;
-  let currentAlbumId = e.target.parentNode.parentNode.id;
-  let url = '/api/albums/' + currentAlbumId + '/songs/' + songId;
-  let updatedTrackNumber = e.target.parentNode.parentNode["0"].value;
-  let updatedSongName = e.target.parentNode.parentNode[1].value;
-  $.ajax({
-    method: 'PUT',
-    url: url,
-    data: {
-      trackNumber: updatedTrackNumber,
-      name: updatedSongName
-    },
-    success: updatedAlbumSuccess,
-    error: updateSongError
-  })
-}
-
-const deleteSongSuccess = (json) => {
-  
-}
-
-const updateSongError = () => {
-  console.log('update song error!');
-}
-
-const deleteSongError = () => {
-  console.log('delete song error!');
-}
-
-const getEditSongHtml = (song) => {
-  let editSongHtml =
-       '  <div class="form-group">' +
-       '    <input type="text" class="form-control song-trackNumber" value="' + song.trackNumber + '">' +
-       '  </div>'+
-       '  <div class="form-group">' +
-       '    <input type="text" class="form-control song-name" value="' + song.name + '">' +
-       '  </div>'+
-       '  <div class="form-group">' +
-       '    <button class="btn btn-danger delete-song" data-song-id="' + song._id + '">x</button>' +
-       '  </div>'+
-       '  <div class="form-group">' +
-       '    <button class="btn btn-success save-song" data-song-id="' + song._id + '">save</span></button>' +
-       '  </div>';
-  return editSongHtml;
-}
-
-const getEditSongsFormBody = (json) => {
-  let editSongListHtml = json.songs.map((song) => {
-    let currentEditSongHtml = '<form class="form-inline" id="' + json._id  + '"' +
-    getEditSongHtml(song) +
-    '</form>';
-    return currentEditSongHtml;
-  }).join("");
-  return editSongListHtml;
-}
-
-const updateEditSongsModalBody = (e) => {
-  let albumToUpdateId = e.target.parentNode.parentNode.parentNode.parentNode.dataset.albumId;
-  let albumToUpdateUrl = '/api/albums/' + albumToUpdateId;
-  $.ajax({
-    method: 'GET',
-    url: albumToUpdateUrl,
-    success: updateSongsModalBody,
-    error: handleError
-  })
-}
-
-const handleEditSongsButton = (e) => {
-  updateEditSongsModalBody(e);
-  $('#editSongsModal').modal('show');
-}
-
-const updateSongsModalBody = (json) => {
-  $('#editSongsModalBody').empty().append(getEditSongsFormBody(json));
-}
-
 
 const handleSaveChangesButton = (e) => {
   e.preventDefault();
@@ -378,7 +276,6 @@ function getAlbumHtml(album) {
   "              <div class='panel-footer'>" +
   "<button type='button' class='btn btn-primary add-song' data-toggle='modal' data-target='#songModal'>Add Song</button>" +
   "<button class='btn btn-info edit-album'>Edit Album</button>" +
-  "<button class='btn btn-info edit-songs'>Edit Songs</button>" +
   // added hidden save changes button
   "<button class='btn btn-info save-changes hidden'>Save Changes</button>" +
   "<button type='button' class='btn btn-danger delete'>Delete</button>" +

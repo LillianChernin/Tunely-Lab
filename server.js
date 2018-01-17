@@ -114,13 +114,6 @@ app.put('/api/albums/:album_id', (request, response) => {
   );
 })
 
-app.put('/api/albums/:album_id/songs/:id', (request, response) => {
-  // db.User.findByIdAndUpdate(
-  //   { _id: request.params.album_id},
-  //
-  // )
-})
-
 
 app.delete('/api/albums/:album_id', (request, response) => {
   db.Album.findByIdAndRemove(request.params.album_id, (err, todo) => {
@@ -130,20 +123,6 @@ app.delete('/api/albums/:album_id', (request, response) => {
     response.status(200).send(todo);
   })
 })
-
-app.delete('/api/albums/:album_id/songs/:id', (request, response) => {
-  db.Album.findByIdAndUpdate(
-    { _id: request.params.album_id},
-    { $pull: { songs: { _id: request.params.id } } },
-    {new: true},
-    (err, model) => {
-      if (err) {
-        response.status(500).send(err);
-      }
-     response.status(200).send(model);
-  })
-})
-
 
 /**********
  * SERVER *
